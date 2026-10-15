@@ -1,0 +1,109 @@
+{
+  "problem_framing": "Predict broad 2018 disengagement using only activity observed through 2017-12-31.",
+  "feature_cutoff": "2017-12-31",
+  "outcome_window": "2018-01-01 through 2018-12-31",
+  "target_definition": "2018 cancellation OR at least 6 consecutive zero-flight months during 2018 (among members active in the program on 2017-12-31).",
+  "predictor_features": [
+    "total_flights_2017",
+    "active_months_2017",
+    "mean_monthly_flights_2017",
+    "std_monthly_flights_2017",
+    "total_distance_2017",
+    "points_accumulated_2017",
+    "points_redeemed_2017",
+    "dollar_cost_redeemed_2017",
+    "q1_flights_2017",
+    "q2_flights_2017",
+    "q3_flights_2017",
+    "q4_flights_2017",
+    "months_since_last_flight",
+    "longest_zero_run_2017",
+    "flights_h1_2017",
+    "flights_h2_2017",
+    "flight_trend_h2_vs_h1_2017",
+    "redemption_rate_2017",
+    "tenure_months_asof_2017_12"
+  ],
+  "selected_model": "Histogram Gradient Boosting",
+  "model_selection_metric": "Mean five-fold average precision on the training split; test split is held out until final evaluation.",
+  "cross_validation": {
+    "Logistic Regression": {
+      "fold_average_precision": [
+        0.4704250178275296,
+        0.3773691582229101,
+        0.415126301553059,
+        0.3925208418350084,
+        0.46376668231383933
+      ],
+      "mean_average_precision": 0.42384160035046925,
+      "std_average_precision": 0.041775175577234855
+    },
+    "Histogram Gradient Boosting": {
+      "fold_average_precision": [
+        0.47434792879757565,
+        0.38381385605710977,
+        0.4277292201426,
+        0.4023867628672515,
+        0.4901308729972893
+      ],
+      "mean_average_precision": 0.43568172817236517,
+      "std_average_precision": 0.045612108313887664
+    }
+  },
+  "holdout_metrics": {
+    "n": 2461,
+    "positive_rate": 0.07842340511986998,
+    "roc_auc": 0.7286737761694584,
+    "average_precision": 0.4465325150168758,
+    "brier_score": 0.05269148297930423,
+    "precision_at_0_5": 0.9655172413793104,
+    "recall_at_0_5": 0.29015544041450775,
+    "f1_at_0_5": 0.44621513944223107,
+    "confusion_matrix_labels_0_1": {
+      "tn": 2266,
+      "fp": 2,
+      "fn": 137,
+      "tp": 56
+    },
+    "top_decile_n": 247,
+    "top_decile_positive_rate": 0.3319838056680162,
+    "top_decile_lift_over_base": 4.2332235531035645,
+    "top_decile_recall": 0.42487046632124353
+  },
+  "data_quality_audit": {
+    "members_in_source": 16737,
+    "activity_rows_raw": 392936,
+    "activity_rows_after_member_month_dedup": 389065,
+    "duplicate_member_month_rows_removed": 3871,
+    "duplicate_member_month_groups": 3847,
+    "conflicting_duplicate_groups": 1943,
+    "duplicate_policy_sensitivity_first_vs_last": {
+      "first_row_broad_churners": 966,
+      "last_row_broad_churners": 990,
+      "members_with_changed_broad_churn_label": 24,
+      "first_row_rate": 0.07850467289719626,
+      "last_row_rate": 0.08045509955302722,
+      "members_with_changed_2017_flight_total": 94,
+      "first_row_total_2017_flights": 212759,
+      "last_row_total_2017_flights": 211091
+    },
+    "eligible_cohort_size": 12305,
+    "formal_2018_cancellations": 486,
+    "silent_2018_churners": 480,
+    "broad_2018_churners": 966,
+    "broad_2018_churn_rate": 0.07850467289719626,
+    "experiment_historical_at_risk_n": 799,
+    "experiment_historical_90d_returners": 712,
+    "experiment_historical_90d_return_rate": 0.8911138923654568
+  },
+  "ab_test_design": {
+    "randomized_assignment_available": false,
+    "historical_assignment": "None in the supplied files; no treatment effect or causal lift is estimated.",
+    "eligibility": "Enrolled and uncancelled at 2017-12-31, at least one flight during 2017, and at least 3 months since the last 2017 flight.",
+    "historical_control_proxy": "Observed any-flight rate in Jan-Mar 2018 for the eligible historical cohort. This is a baseline reference, not a randomized control arm.",
+    "primary_outcome_for_proposed_trial": "At least one flight during the 90 days after randomized assignment (intent-to-treat).",
+    "treatment_example": "Personalized route reminder plus a pre-specified points offer versus business-as-usual communication.",
+    "randomization_unit": "Loyalty Number, stratified by predicted risk tier.",
+    "power_assumptions": "Two-sided two-proportion normal approximation, alpha=0.05, power=0.80, equal allocation, 10% allowance for unusable follow-up."
+  }
+}
